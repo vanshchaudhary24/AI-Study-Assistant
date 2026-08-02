@@ -1,28 +1,40 @@
-import { useAuth } from "../../hooks/useAuth";
-
 const WelcomeBanner = () => {
 
-  const { user } = useAuth();
+  const hour = new Date().getHours();
+
+  let greeting = "Good Evening";
+
+  if (hour < 12) greeting = "Good Morning";
+  else if (hour < 17) greeting = "Good Afternoon";
 
   return (
 
-    <section className="mb-8 rounded-3xl bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 p-10">
+    <div className="mb-10 rounded-3xl bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 p-8 shadow-xl">
 
       <h1 className="text-4xl font-bold text-white">
 
-        👋 Welcome Back,
-        {" "}
-        {user?.fullName || "Student"}
+        {greeting} 👋
 
       </h1>
 
       <p className="mt-3 text-lg text-blue-100">
 
-        Ready to learn something new today?
+        Welcome back to your AI Study Assistant.
 
       </p>
 
-    </section>
+      <p className="mt-2 text-sm text-blue-200">
+
+        {new Date().toLocaleDateString(undefined,{
+          weekday:"long",
+          year:"numeric",
+          month:"long",
+          day:"numeric"
+        })}
+
+      </p>
+
+    </div>
 
   );
 

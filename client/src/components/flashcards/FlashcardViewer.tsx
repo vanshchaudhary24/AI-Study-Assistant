@@ -1,6 +1,7 @@
-import { useState , useEffect } from "react";
+import { useState, useEffect } from "react";
 
 import { ChevronLeft, ChevronRight, RotateCcw } from "lucide-react";
+import Loader from "../common/Loader";
 
 interface Flashcard {
   front: string;
@@ -9,12 +10,14 @@ interface Flashcard {
 
 interface Props {
   open: boolean;
+  loading: boolean;
   onClose: () => void;
   flashcards: Flashcard[];
 }
 
 const FlashcardViewer = ({
   open,
+  loading,
   onClose,
   flashcards,
 }: Props) => {
@@ -24,13 +27,29 @@ const FlashcardViewer = ({
   const [flipped, setFlipped] = useState(false);
 
   useEffect(() => {
-    if(open){
+    if (open) {
       setIndex(0);
       setFlipped(false);
     }
   }, [open]);
 
   if (!open) return null;
+
+  if (loading) {
+    return (
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70">
+        <div className="rounded-2xl bg-slate-900 p-8 text-center">
+          <h2 className="mb-4 text-xl font-bold text-white">
+            Flashcards
+          </h2>
+
+          <Loader text="Generatin Flashcards..." />
+
+        </div>
+      </div>
+    );
+  }
+
   if (flashcards.length === 0) {
 
     return (
@@ -43,9 +62,21 @@ const FlashcardViewer = ({
             Flashcards
           </h2>
 
-          <p className="text-slate-300">
-            No flashcards generated.
-          </p>
+          <div className="py-6 text-center">
+
+            <div className="text-6xl">
+              🃏
+            </div>
+
+            <h2 className="mt-4 text-2xl font-bold text-white">
+              No Flashcards Available
+            </h2>
+
+            <p className="mt-3 text-slate-400">
+              Generate flashcards to revise this document quickly.
+            </p>
+
+          </div>
 
           <button
             onClick={onClose}
@@ -61,7 +92,10 @@ const FlashcardViewer = ({
     );
   }
 
-  const card = flashcards[index];
+  const card = flashcards[index] ?? {
+    front: "",
+    back: "",
+  };
 
   return (
 

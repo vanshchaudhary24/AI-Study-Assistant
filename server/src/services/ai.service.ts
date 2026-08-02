@@ -3,7 +3,7 @@ import axios from "axios";
 const AI_SERVICE_URL =
   process.env.AI_SERVICE_URL || "http://127.0.0.1:8000";
 
-
+// ========================= index document===============
 export const indexDocument = async (
   documentId: string,
   userId: string,
@@ -43,7 +43,7 @@ export const indexDocument = async (
 
 };
 
-
+// ==================== Ask ai===================
 export const askAI = async (
   userId: string,
   question: string,
@@ -83,7 +83,7 @@ export const askAI = async (
   }
 
 };
-
+// ==================== delete indexed document=================
 export const deleteIndexedDocument = async (
     documentId: string
 ) => {
@@ -113,10 +113,9 @@ export const deleteIndexedDocument = async (
         }
 
         throw error;
-
     }
-
 };
+
 // ==================================summary================
 export const generateSummary = async (
   userId: string,
@@ -151,8 +150,8 @@ export const generateSummary = async (
     throw error;
 
   }
-
 };
+
 // ========================= quiz =========================
 export const generateQuiz = async (
   userId: string,
@@ -185,9 +184,7 @@ export const generateQuiz = async (
     }
 
     throw error;
-
   }
-
 };
 
 // ========================generate flashcard====================
@@ -214,6 +211,75 @@ export const generateFlashcards = async (
   } catch (error: any) {
 
     console.error("Flashcard Generation Failed");
+
+    if (error.response) {
+      console.error(error.response.data);
+    } else {
+      console.error(error.message);
+    }
+
+    throw error;
+  }
+};
+
+// ==================== search documents =======================
+export const searchDocuments = async (
+  userId: string,
+  query: string
+) => {
+
+  try {
+
+    const response = await axios.post(
+      `${AI_SERVICE_URL}/search`,
+      {
+        userId,
+        query,
+      },
+      {
+        timeout: 180000,
+      }
+    );
+
+    return response.data.results;
+
+  } catch (error: any) {
+
+    console.error("Document Search Failed");
+
+    if (error.response) {
+      console.error(error.response.data);
+    } else {
+      console.error(error.message);
+    }
+    throw error;
+  }
+};
+
+// ====================== Generate Notes=======================
+export const generateNotes = async (
+  userId: string,
+  documentId: string
+) => {
+
+  try {
+
+    const response = await axios.post(
+      `${AI_SERVICE_URL}/notes/generate`,
+      {
+        userId,
+        documentId,
+      },
+      {
+        timeout: 180000,
+      }
+    );
+
+    return response.data.notes;
+
+  } catch (error: any) {
+
+    console.error("Notes Generation Failed");
 
     if (error.response) {
       console.error(error.response.data);

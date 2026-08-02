@@ -11,6 +11,8 @@ import {
   generateSummary,
   generateQuiz,
   generateFlashcards,
+  searchDocuments,
+  generateNotes,
 } from "../controllers/document.controller";
 
 const router = Router();
@@ -22,6 +24,11 @@ router.post(
   upload
 );
 
+router.post(
+  "/search",
+  authenticate,
+  searchDocuments
+);
 
 router.get(
   "/",
@@ -40,6 +47,12 @@ router.post(
   "/:id/summary",
   authenticate,
   generateSummary
+);
+
+router.post(
+  "/:id/notes",
+  authenticate,
+  generateNotes
 );
 
 router.post(

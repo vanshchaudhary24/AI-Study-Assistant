@@ -10,6 +10,8 @@ import {
   generateSummaryService,
   generateQuizService,
   generateFlashcardsService,
+  searchDocumentsService,
+  generateNotesService,
 } from "../services/document.service";
 
 interface DocumentParams {
@@ -86,6 +88,39 @@ export const generateSummary = async (
   }
 };
 
+// ======================= generate notes===============
+export const generateNotes = async (
+
+  req: AuthRequest,
+  res: Response
+
+): Promise<void> => {
+
+  try {
+
+    const notes =
+      await generateNotesService(
+
+        String(req.params.id),
+        req.userId!
+      );
+
+    res.status(200).json({
+
+      success: true,
+      notes,
+    });
+
+  } catch (error: any) {
+
+    res.status(400).json({
+
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
 // genereate Quiz ======================================
 export const generateQuiz = async (
 
@@ -119,7 +154,6 @@ export const generateQuiz = async (
       success: false,
       message: error.message,
     });
-
   }
 };
 
@@ -157,7 +191,43 @@ export const generateFlashcards = async (
   }
 };
 
-// get Document ==============================================
+// =================== search documents=======================
+export const searchDocuments = async (
+
+  req: AuthRequest,
+  res: Response
+
+): Promise<void> => {
+
+  try {
+
+    const { query } = req.body;
+
+    const results =
+      await searchDocumentsService(
+
+        req.userId!,
+        query
+      );
+
+    res.status(200).json({
+
+      success: true,
+      results,
+    });
+  }
+
+  catch (error: any) {
+
+    res.status(400).json({
+
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+//=================== get Documents =============================
 export const getDocuments = async (
   req: AuthRequest,
   res: Response
@@ -198,6 +268,7 @@ export const getDocument = async (
     });
   }
 };
+
 //= ========================= dlete docs ================
 export const deleteDocument = async (
   req: AuthRequest & { params: DocumentParams },

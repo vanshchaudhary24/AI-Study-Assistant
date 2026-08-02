@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
+import Loader from "../../components/common/Loader";
 
 import {
   Download,
@@ -12,6 +13,8 @@ import {
 import SummaryViewer from "../../components/summary/SummaryViewer";
 import QuizViewer from "../../components/quiz/QuizViewer";
 import FlashcardViewer from "../../components/flashcards/FlashcardViewer";
+import { searchDocuments } from "../../services/search.service";
+import NotesViewer from "../../components/notes/NotesViewer";
 
 import {
   getDocuments,
@@ -21,6 +24,7 @@ import {
   generateSummary,
   generateQuiz,
   generateFlashcards,
+  generateNotes,
 } from "../../services/document.service";
 
 import type { Document } from "../../types/document";
@@ -44,6 +48,16 @@ const Documents = () => {
   const [summary, setSummary] =
     useState("");
 
+  // ======================= notes======================
+  const [notesOpen, setNotesOpen] =
+    useState(false);
+
+  const [notesLoading, setNotesLoading] =
+    useState(false);
+
+  const [notes, setNotes] =
+    useState("");
+
   //=====================quiz ==================
   const [quizOpen, setQuizOpen] =
     useState(false);
@@ -62,6 +76,13 @@ const Documents = () => {
     useState<any[]>([]);
 
   const [flashcardLoading, setFlashcardLoading] =
+    useState(false);
+
+  // ================ search documents==================
+  const [searchResults, setSearchResults] =
+    useState<any[]>([]);
+
+  const [semanticSearching, setSemanticSearching] =
     useState(false);
 
 
@@ -121,9 +142,7 @@ const Documents = () => {
     try {
 
       setSummary("");
-
       setSummaryOpen(true);
-
       setSummaryLoading(true);
 
       const response =
@@ -140,15 +159,41 @@ const Documents = () => {
       toast.error(
         "Summary generation failed."
       );
-
     }
 
     finally {
 
       setSummaryLoading(false);
-
     }
+  };
 
+  // ============== handle notes ======================
+  const handleNotes = async (
+    id: string
+  ) => {
+
+    try {
+
+      setNotes("");
+      setNotesOpen(true);
+      setNotesLoading(true);
+
+      const response =
+        await generateNotes(id);
+
+      setNotes(
+        response.notes
+      );
+
+    } catch {
+
+      toast.error(
+        "Notes generation failed."
+      );
+
+    } finally {
+      setNotesLoading(false);
+    }
   };
 
   // ==================== handle flashcard ====================
@@ -159,7 +204,6 @@ const Documents = () => {
     try {
 
       setFlashcardLoading(true);
-
       setFlashcardOpen(true);
 
       const response =
@@ -176,11 +220,8 @@ const Documents = () => {
       );
 
     } finally {
-
       setFlashcardLoading(false);
-
     }
-
   };
 
   // ============================== hadlequiz ===============
@@ -193,16 +234,13 @@ const Documents = () => {
     try {
 
       setQuiz([]);
-
       setQuizOpen(true);
-
       setQuizLoading(true);
 
       const response =
         await generateQuiz(id);
 
       setQuiz(response.quiz);
-
     }
 
     catch {
@@ -214,6 +252,37 @@ const Documents = () => {
 
     finally {
       setQuizLoading(false);
+    }
+  };
+
+  // ===================== handle semantic search===================
+  const handleSemanticSearch = async () => {
+
+    if (!search.trim()) {
+
+      setSearchResults([]);
+      return;
+    }
+    try {
+
+      setSemanticSearching(true);
+
+      const response =
+        await searchDocuments(search);
+
+      setSearchResults(
+        response.results
+      );
+    }
+
+    catch {
+      toast.error(
+        "Search failed."
+      );
+    }
+
+    finally {
+      setSemanticSearching(false);
     }
   };
 
@@ -242,18 +311,92 @@ const Documents = () => {
 
         <input
           value={search}
-          onChange={(e) =>
+          onChange={(e) => {
             setSearch(e.target.value)
-          }
+          }}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              handleSemanticSearch();
+            }
+          }}
           placeholder="Search documents..."
-          className="w-full rounded-xl border border-slate-700 bg-slate-900 py-3 pl-12 pr-4 text-white"
+          className="w-full rounded-2xl border border-slate-700 bg-slate-900 py-4 pl-12 pr-4 text-white transition focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
         />
       </div>
 
-      {loading ? (
-        <p className="text-slate-400">
-          Loading...
+      {semanticSearching && (
+
+        <p className="mb-6 text-slate-400">
+          Searching...
         </p>
+      )}
+
+      {searchResults.length > 0 && (
+
+        <div className="mb-8 rounded-xl border border-slate-700 bg-slate-900 p-6">
+          <h2 className="mb-4 text-xl font-bold text-white">
+            Search Results
+          </h2>
+
+          <div className="space-y-4">
+
+            {searchResults.map((item, index) => (
+              <div
+                key={index}
+                className="rounded-2xl border border-slate-700 bg-gradient-to-br from-slate-900 to-slate-800 p-5 transition hover:border-blue-500"
+              >
+
+                <div className="mb-3 flex items-center justify-between">
+                  <span className="rounded-full bg-blue-600 px-3 py-1 text-xs font-semibold text-white">
+                    AI Match
+                  </span>
+
+                  <span className="text-sm text-green-400">
+                    {(item.score * 100).toFixed(1)}% Match
+                  </span>
+
+                </div>
+
+                <p className="line-clamp-6 whitespace-pre-wrap text-slate-200">
+                  {item.document}
+                </p>
+
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {!semanticSearching &&
+        search.length > 0 &&
+        searchResults.length === 0 && (
+
+          <div className="mb-8 rounded-2xl border border-dashed border-slate-700 bg-slate-900 p-10 text-center">
+
+            <div className="mb-4 text-6xl">
+              🔍
+            </div>
+
+            <h2 className="text-2xl font-bold text-white">
+              No Results Found
+            </h2>
+
+            <p className="mt-3 text-slate-400">
+
+              AI couldn't find anything related to
+
+              <span className="ml-2 font-semibold text-white">
+
+                "{search}"
+
+              </span>
+            </p>
+          </div>
+
+        )}
+
+      {loading ? (
+        <Loader text="Loading Documents..." />
 
       ) : filtered.length === 0 ? (
         <div className="rounded-xl border border-dashed border-slate-700 py-20 text-center">
@@ -277,84 +420,100 @@ const Documents = () => {
           {filtered.map((doc) => (
             <div
               key={doc._id}
-              className="rounded-2xl border border-slate-800 bg-slate-900 p-6"
+              className="group rounded-3xl border border-slate-800 bg-gradient-to-br from-slate-900 to-slate-800 p-6 tansition-all duration-300 hover:-translate-y-2 hover:border-blue-500 hover:shadow-2xl hover:shadow-blue-500/20"
             >
-              <FileText
-                size={36}
-                className="mb-4 text-blue-500"
-              />
+              <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-600 shadow-lg" >
 
-              <h3 className="truncate text-lg font-semibold text-white">
+                <FileText
+                  size={30}
+                  className="text-white"
+                />
+              </div>
+
+              <h3 className="line-clamp-2 min-h-[56px] text-xl font-bold text-white">
                 {doc.originalName}
               </h3>
 
-              <p className="mt-2 text-sm text-slate-400">
+              <p className="mt-3 text-sm font-medium text-slate-300">
                 {(doc.fileSize / 1024 / 1024).toFixed(2)} MB
               </p>
 
-              <p className="mt-1 text-sm text-slate-500">
+              <p className="text-sm text-slate-500">
                 {new Date(
                   doc.createdAt
                 ).toLocaleDateString()}
               </p>
 
-              <div className="mt-6 flex flex-wrap gap-2">
 
+
+              <div className="mt-8 grid grid-cols-2 gap-3">
 
                 <button
                   onClick={() =>
                     previewDocument(doc._id)
                   }
-                  className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-slate-700 py-2 text-white transition hover:bg-slate-600"
+                  className="flex items-center justify-center gap-2 rounded-xl bg-slate-700 py-2 text-white transition-all duration-200 hover:scale-105 hover:bg-slate-600"
                 >
                   <Eye size={18} />
                   Preview
                 </button>
 
+
                 <button
                   onClick={() =>
                     downloadDocument(doc._id)
                   }
-                  className="flex items-center justify-center gap-2 rounded-xl bg-blue-600 py-2 text-white transition hover:bg-blue-700"
+                  className="flex items-center justify-center gap-2 rounded-xl bg-blue-600 py-2 font-medium text-white transition-all duration-200 hover:scale-105 hover:bg-blue-700"
                 >
                   <Download size={18} />
                   Download
                 </button>
 
+
                 <button
                   onClick={() =>
                     handleSummary(doc._id)
                   }
-                  className="rounded-xl bg-green-600 py-2 test-white hover:bg-green-700">
+                  className="flex items-center justify-center rounded-xl bg-green-600 py-2 font-medium text-white transition-all duration-200 hover:scale-105 hover:bg-green-700">
                   Generate Summary
                 </button>
+
+
+                <button
+                  onClick={() =>
+                    handleNotes(doc._id)
+                  }
+                  className="flex items-center justify-center rounded-xl bg-indigo-600 py-2 font-medium text-white transition-all duration-200 hover:scale-105 hover:bg-indigo-700"
+                >
+                  Generate Notes
+                </button>
+
 
                 <button
                   onClick={() =>
                     handleFlashcards(doc._id)
                   }
-                  className="flex flex-1 items-center justify-center rounded-xl bg-purple-600 py-2 text-white hover:bg-purple-700"
+                  className="flex items-center justify-center rounded-xl bg-purple-600 py-2 font-medium text-white transition-all duration-200 hover:scale-105 hover:bg-purple-700"
                 >
-
                   Flashcards
-
                 </button>
+
 
                 <button
                   onClick={() =>
                     handleQuiz(doc._id)
                   }
-                  className="flex flex-1 items-center justify-center rounded-xl bg-purple-600 py-2 text-white hover:bg-purple-700"
+                  className="flex items-center justify-center rounded-xl bg-pink-600 py-2 font-medium text-white transition-all duration-200 hover:scale-105 hover:bg-pink-700"
                 >
                   Generate Quiz
-
                 </button>
+
 
                 <button
                   onClick={() =>
                     handleDelete(doc._id)
                   }
-                  className="flex items-center justify-center rounded-xl bg-red-600 p-2 text-white transition hover:bg-red-700"
+                  className="flex items-center justify-center rounded-xl bg-red-600 py-2 font-medium text-white transition-all duration-200 hover:scale-105 hover:bg-red-700"
                 >
                   <Trash2 size={18} />
                 </button>
@@ -374,12 +533,22 @@ const Documents = () => {
         }
       />
 
+      <NotesViewer
+        open={notesOpen}
+        loading={notesLoading}
+        notes={notes}
+        onClose={() =>
+          setNotesOpen(false)
+        }
+      />
+
       <FlashcardViewer
-      open={flashcardOpen}
-      onClose={() =>
-        setFlashcardOpen(false)
-      }
-      flashcards={flashcards}
+        open={flashcardOpen}
+        loading={flashcardLoading}
+        onClose={() =>
+          setFlashcardOpen(false)
+        }
+        flashcards={flashcards}
       />
 
       <QuizViewer

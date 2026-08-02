@@ -36,7 +36,6 @@ export const getDocuments =
 
     const response =
       await api.get("/documents");
-
     return response.data;
   };
 
@@ -46,7 +45,6 @@ export const deleteDocument =
     return api.delete(
       `/documents/${id}`
     );
-
   };
 
 
@@ -64,15 +62,10 @@ export const downloadDocument = async (id: string) => {
   const link = document.createElement("a");
 
   link.href = url;
-
   link.download = "";
-
   document.body.appendChild(link);
-
   link.click();
-
   link.remove();
-
   window.URL.revokeObjectURL(url);
 
 };
@@ -95,6 +88,7 @@ export const previewDocument = async (
 
 };
 
+// *********************** generate summary******************
 export const generateSummary = async (
   id: string
 ): Promise<SummaryResponse> => {
@@ -105,6 +99,18 @@ export const generateSummary = async (
 
   return response.data;
 
+};
+
+// ///////////////////////// nottes//////////////////////////
+export const generateNotes = async (
+  id: string
+) => {
+
+  const response = await api.post(
+    `/documents/${id}/notes`
+  );
+
+  return response.data;
 };
 
 // ====================== flashcard =====================

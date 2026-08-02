@@ -5,6 +5,7 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import toast from "react-hot-toast";
+import Loader from "../common/Loader";
 
 interface Props {
   open: boolean;
@@ -69,9 +70,9 @@ const SummaryModal = ({
 
               {copied ?
 
-                <Check size={18}/> :
+                <Check size={18} /> :
 
-                <Copy size={18}/>
+                <Copy size={18} />
 
               }
 
@@ -85,7 +86,7 @@ const SummaryModal = ({
 
             >
 
-              <X size={18}/>
+              <X size={18} />
 
             </button>
 
@@ -97,30 +98,33 @@ const SummaryModal = ({
 
           {loading ? (
 
-            <div className="flex h-full items-center justify-center">
-
-              <div className="h-12 w-12 animate-spin rounded-full border-4 border-blue-500 border-t-transparent"/>
-
-            </div>
+            <Loader text="Generatin AI Summary" />
 
           ) : (
 
             <div className="whitespace-pre-wrap leading-8 text-slate-300">
 
-              {summary}
+              {summary.length > 0 ? (
+                summary
+              ) : (
 
+                <div className="py-10 text-center">
+                  <div className="text-5xl">
+                  </div>
+
+                  <p className="mt-5 text-slate-400">
+                    No summary generated.
+                  </p>
+                </div>
+              )}
             </div>
 
           )}
 
         </div>
-
       </div>
-
     </div>
-
   );
-
 };
 
 export default SummaryModal;

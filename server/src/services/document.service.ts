@@ -1,15 +1,15 @@
 import Document from "../models/Document";
 import { extractDocument } from "./parser.service";
 import { deleteFile } from "./file.service";
-import { 
-  indexDocument ,
-  deleteIndexedDocument,
-} from "./ai.service";
 
 import {
+   indexDocument ,
+   deleteIndexedDocument,
    generateSummary , 
    generateQuiz,
    generateFlashcards,
+   searchDocuments,
+   generateNotes,
    } from "./ai.service"
 
 export const uploadDocumentService = async (
@@ -125,14 +125,14 @@ export const deleteDocumentService = async (
     );
 
   }
-  // Delete MongoDB document =====================
 
+  // Delete MongoDB document =====================
   await Document.findByIdAndDelete(id);
 
   return document;
 };
 
-
+//==================== download docs ====================
 export const downloadDocumentService = async (
   id: string,
   userId: string
@@ -151,7 +151,6 @@ export const downloadDocumentService = async (
 };
 
 // ======================genrate summary ========================
-
 export const generateSummaryService = async (
 
   documentId: string,
@@ -182,14 +181,43 @@ export const generateSummaryService = async (
   const summary = await generateSummary(
 
     userId,
-
     documentId
-
   );
 
   document.summary = summary;
   await document.save();
   return summary;
+};
+
+// =================== GEneratae notes===========================
+export const generateNotesService = async (
+  documentId: string,
+  userId: string
+) => {
+
+  const document = await Document.findOne({
+    _id: documentId,
+    uploadedBy: userId,
+  });
+
+  if (!document) {
+    throw new Error("Document not found.");
+  }
+  if (
+    document.notes &&
+    document.notes.length > 0
+  ) {
+    return document.notes;
+  }
+
+  const notes = await generateNotes(
+    userId,
+    documentId
+  );
+
+  document.notes = notes;
+  await document.save();
+  return notes;
 };
 
 // ======================== flashcards =========================
@@ -207,15 +235,23 @@ export const generateFlashcardsService = async (
     throw new Error("Document not found.");
   }
 
+  if (document.flashcards && document.flashcards.length > 0)
+    {
+    return document.flashcards;
+  }
+
   const flashcards = await generateFlashcards(
     userId,
     documentId
   );
 
+  document.flashcards = flashcards ;
+  await document.save();
+
   return flashcards;
 };
 
-// generate Quiz =============================================
+//================ generate Quiz ================================
 export const generateQuizService = async (
 
     documentId: string,
@@ -260,6 +296,16 @@ export const generateQuizService = async (
     await document.save();
 
     return quiz;
+};
+// ================== search documents=========================
+export const searchDocumentsService = async (
+  userId: string,
+  query: string
+) => {
+
+  return await searchDocuments(
+    userId,
+    query
+  );
 
 };
-

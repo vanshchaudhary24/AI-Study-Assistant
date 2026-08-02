@@ -10,6 +10,8 @@ export interface IDocument extends Document {
   
   summary?: string;
   quiz?: any[];
+  notes?: string;
+  flashcards?: any[];
   
   uploadedBy: mongoose.Types.ObjectId;
 
@@ -55,6 +57,17 @@ const DocumentSchema = new Schema<IDocument>(
     },
 
     quiz: {
+      type: Array,
+      default: [],
+    },
+
+    notes: {
+      type: String,
+      default: "",
+
+    },
+
+    flashcards: {
       type: Array,
       default: [],
     },

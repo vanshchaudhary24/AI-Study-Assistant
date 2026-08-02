@@ -1,11 +1,10 @@
+import Loader from "../common/Loader";
+
 interface QuizViewerProps {
 
   open: boolean;
-
   loading: boolean;
-
   quiz: any[];
-
   onClose: () => void;
 
 }
@@ -39,18 +38,30 @@ const QuizViewer = ({
           >
 
             Close
-
           </button>
-
         </div>
 
         {loading ? (
 
-          <p className="text-white">
+          <Loader text="Generating Quiz..." />
 
-            Generating quiz...
+        ) : quiz.length === 0 ? (
 
-          </p>
+          <div className="py-10 text-center">
+
+            <div className="text-6xl">
+              🧠
+            </div>
+
+            <h2 className="mt-4 text-2xl font-bold text-white">
+              No Quiz Available
+            </h2>
+
+            <p className="mt-3 text-slate-400">
+              Generate an AI quiz to test your understanding.
+            </p>
+
+          </div>
 
         ) : (
 
@@ -68,9 +79,7 @@ const QuizViewer = ({
                 >
 
                   <h3 className="mb-4 font-semibold text-white">
-
                     {index + 1}. {q.question}
-
                   </h3>
 
                   <div className="space-y-2">
@@ -83,8 +92,14 @@ const QuizViewer = ({
 
                         <div
                           key={i}
-                          className="rounded-lg bg-slate-800 p-3 text-slate-200"
+                          className="rounded-lg border border-slate-700 bg-slate-800 p-3 text-slate-200 transition hover:border-blue-500"
                         >
+
+                          <span className="mr-2 font-semibold text-blue-400">
+
+                            {String.fromCharCode(65 + i)}.
+
+                          </span>
 
                           {option}
 
@@ -95,9 +110,12 @@ const QuizViewer = ({
 
                   </div>
 
-                  <div className="mt-4 rounded-lg bg-green-900 p-3 text-green-300">
+                  <div className="mt-4 rounded-lg border border-green-700 bg-green-900/40 p-3 text-green-300">
 
-                    Answer: {q.answer}
+                    <span className="font-semibold">
+                      Correct Answer:
+                    </span>{" "}
+                    {q.answer}
 
                   </div>
 
@@ -111,7 +129,6 @@ const QuizViewer = ({
         )}
 
       </div>
-
     </div>
 
   );

@@ -9,6 +9,8 @@ from app.api.delete_document import router as delete_router
 from app.api.summary import router as summary_router
 from app.api.quiz import router as quiz_router
 from app.api.flashcard import router as flashcard_router
+from app.api.search import router as search_router
+from app.api.notes import router as notes_router
 
 from contextlib import asynccontextmanager
 
@@ -21,8 +23,6 @@ from app.core.model_loader import model_loader
 async def lifespan(app: FastAPI):
 
     model_loader.load_models()
-
-
     yield
 
 app = FastAPI(
@@ -43,6 +43,8 @@ app.include_router(delete_router)
 app.include_router(summary_router)
 app.include_router(quiz_router)
 app.include_router(flashcard_router)
+app.include_router(search_router)
+app.include_router(notes_router)
 
 
 

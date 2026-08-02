@@ -13,6 +13,7 @@ import { timeStamp } from "console";
 import documentRoutes from "./routes/document.routes";
 import chatRoutes from "./routes/chat.routes";
 import dashboardRoutes from "./routes/dashboard.routes";
+import analyticsRoutes from "./routes/analytics.routes";
 
 
 const app = express();
@@ -75,6 +76,11 @@ app.get("/api/health", (_, res) => {
 });
 
 app.use("/api/auth", authRoutes);
+app.use(
+  "/api/analytics",
+  analyticsRoutes
+);
+
 app.use(notFound);
 app.use(errorHandler);
 
