@@ -11,6 +11,8 @@ from app.api.quiz import router as quiz_router
 from app.api.flashcard import router as flashcard_router
 from app.api.search import router as search_router
 from app.api.notes import router as notes_router
+from app.api.ocr import router as ocr_router
+
 
 from contextlib import asynccontextmanager
 
@@ -45,6 +47,8 @@ app.include_router(quiz_router)
 app.include_router(flashcard_router)
 app.include_router(search_router)
 app.include_router(notes_router)
+app.include_router(ocr_router)
+
 
 
 

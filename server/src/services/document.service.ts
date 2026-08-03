@@ -24,15 +24,11 @@ export const uploadDocumentService = async (
 
   const document = await Document.create({
     fileName: file.filename,
-
     originalName: file.originalname,
 
     fileType: file.mimetype,
-
     fileSize: file.size,
-
     filePath: file.path,
-
     text: parsedDocument.text,
 
     uploadedBy: userId,
@@ -51,9 +47,7 @@ export const uploadDocumentService = async (
 
   }
   catch(error){
-
     console.error("Document uploaded but AI indexing failed.");
-
   }
 
   return document;

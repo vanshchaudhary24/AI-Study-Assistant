@@ -30,13 +30,16 @@ const fileFilter: multer.Options["fileFilter"] = (
   cb
 ) => {
 
-  const allowedTypes = [
-    "application/pdf",
+const allowedTypes = [
 
-    "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+  "application/pdf",
+  "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+  "text/plain",
+  "image/png",
+  "image/jpeg",
+  "image/jpg",
 
-    "text/plain",
-  ];
+];
 
   if (allowedTypes.includes(file.mimetype)) {
     cb(null, true);

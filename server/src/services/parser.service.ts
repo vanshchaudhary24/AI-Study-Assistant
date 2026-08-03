@@ -2,6 +2,7 @@ import fs from "fs/promises";
 import pdfParse from "pdf-parse";
 import mammoth from "mammoth";
 import { ParsedDocument } from "../types/document.types";
+import { extractImageText } from "./ocr.service";
 
 export const extractDocument = async (
   filePath: string,
@@ -18,6 +19,14 @@ export const extractDocument = async (
 
     case "text/plain":
       return extractTXT(filePath);
+
+    case "image/png":
+      
+    case "image/jpeg":
+
+    case "image/jpg":
+
+        return extractImage(filePath);
 
     default:
       throw new Error("Unsupported document type.");
@@ -68,6 +77,25 @@ const extractTXT = async (
     text,
     pageCount: 1,
     metadata: {}
+  };
+
+};
+
+const extractImage = async (
+  filePath: string
+): Promise<ParsedDocument> => {
+
+  const text =
+    await extractImageText(filePath);
+
+  return {
+
+    text,
+
+    pageCount: 1,
+
+    metadata: {}
+
   };
 
 };
