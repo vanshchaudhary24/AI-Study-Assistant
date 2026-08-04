@@ -1,6 +1,6 @@
 from fastapi import APIRouter, UploadFile, File
 
-from services.ocr_service import extract_text
+from app.services.ocr_service import extract_text
 
 import shutil
 import os

@@ -1,23 +1,23 @@
 from sentence_transformers import SentenceTransformer
-
 from app.core.config import settings
-
 
 class ModelLoader:
 
     def __init__(self):
-
         self.embedding_model = None
 
-    def load_models(self):
+    def get_embedding_model(self):
 
-        print("Loading Embedding Model...")
+        if self.embedding_model is None:
 
-        self.embedding_model = SentenceTransformer(
-            settings.EMBEDDING_MODEL
-        )
+            print("Loading Embedding Model...")
 
-        print("Embedding Model Loaded Successfully.")
+            self.embedding_model = SentenceTransformer(
+                settings.EMBEDDING_MODEL
+            )
 
+            print("Embedding Model Loaded.")
+
+        return self.embedding_model
 
 model_loader = ModelLoader()

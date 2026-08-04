@@ -24,7 +24,7 @@ from app.core.model_loader import model_loader
 @asynccontextmanager
 async def lifespan(app: FastAPI):
 
-    model_loader.load_models()
+   # model_loader.load_models()
     yield
 
 app = FastAPI(

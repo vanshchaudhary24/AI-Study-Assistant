@@ -16,7 +16,7 @@ interface Props {
 }
 
 const UploadChart = ({
-  data,
+  data =[],
 }: Props) => {
 
   return (
