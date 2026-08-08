@@ -9,27 +9,26 @@ const SelectedFiles = ({ files, removeFile }: Props) => {
   if (files.length === 0) return null;
 
   return (
-    <div className="mt-8 rounded-2xl bg-slate-900 border border-slate-800 p-6">
-
-      <h2 className="text-xl font-semibold text-white mb-6">
+    <div>
+      <h2 className="mb-6 text-xl font-semibold text-slate-900 dark:text-white">
         Selected Files
       </h2>
 
       <div className="space-y-4">
-
         {files.map((file, index) => (
           <div
             key={index}
-            className="flex items-center justify-between rounded-xl bg-slate-800 p-4"
+            className="flex items-center justify-between rounded-xl bg-slate-100 p-4 dark:bg-slate-800"
           >
             <div className="flex items-center gap-4">
-
               <FileText className="text-blue-500" />
 
               <div>
-                <p className="text-white">{file.name}</p>
+                <p className="text-slate-900 dark:text-white">
+                  {file.name}
+                </p>
 
-                <p className="text-sm text-slate-400">
+                <p className="text-sm text-slate-500 dark:text-slate-400">
                   {(file.size / 1024 / 1024).toFixed(2)} MB
                 </p>
               </div>
@@ -43,7 +42,6 @@ const SelectedFiles = ({ files, removeFile }: Props) => {
             </button>
           </div>
         ))}
-
       </div>
     </div>
   );

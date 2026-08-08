@@ -16,6 +16,7 @@ import Profile from "../pages/Profile/Profile";
 import GoogleSuccess  from "../pages/Auth/GoogleSuccess";
 import Documents from "../pages/Documents/Documents";
 import Chat from "../pages/Chat/Chat";
+import Settings from "../pages/Settings/Settings";
 
 
 import NotFound from "../pages/NotFound/NotFound";
@@ -124,6 +125,13 @@ const AppRoutes = () => {
             path="/profile"
             element={<Profile />}
           />
+
+          <Route
+          path="/settings"
+          element={<Settings/>}
+          />
+
+
         </Route>
 
         {/* ---------- 404 ---------- */}

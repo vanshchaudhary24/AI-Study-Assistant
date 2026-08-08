@@ -73,11 +73,9 @@ className="rounded-xl bg-blue-600 px-6 py-3 text-white"
 Update Password
 
 </button>
-
 </form>
 
 );
-
 };
 
 export default ChangePasswordForm;

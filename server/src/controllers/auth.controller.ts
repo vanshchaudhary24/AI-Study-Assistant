@@ -1,8 +1,6 @@
 import { Request, Response } from "express";
 import { AuthRequest } from "../middleware/auth.middleware";
-import { getCurrentUser } from "../services/user.service";
 import { refreshAccessToken, updateProfile, uploadAvatar } from "../services/user.service";
-import { logoutUser, changePassword } from "../services/user.service";
 import { changePasswordSchema, updateProfileSchema } from "../validators/auth.validator";
 
 import {
@@ -10,14 +8,19 @@ import {
   verifyOTPSchema,
   loginSchema,
   resetPasswordSchema,
+  deleteAccountSchema,
 } from "../validators/auth.validator";
 
 import {
+  getCurrentUser,
+  logoutUser,
+  changePassword,
   registerUser,
   verifyOTP as verifyOTPService,
   loginUser,
   forgotPassword as forgotPasswordService,
   resetPassword as resetPasswordService,
+  deleteAccount as deleteAccountService,
 } from "../services/user.service";
 
 
@@ -224,6 +227,8 @@ export const changeUserPassword = async (
     });
   }
 };
+
+// ================ update profile=========================
 export const updateUserProfile = async (
   req: AuthRequest,
   res: Response
@@ -252,13 +257,13 @@ export const updateUserProfile = async (
   }
 };
 
+// ================= upload avatar=====================
 export const uploadUserAvatar = async (
   req: AuthRequest,
   res: Response
 ): Promise<void> => {
 
   try {
-
     if (!req.file) {
       res.status(400).json({
         success: false,
@@ -286,5 +291,32 @@ export const uploadUserAvatar = async (
     });
 
   }
+};
 
+// =================== delete Account===========================
+export const deleteUserAccount = async (
+  req: AuthRequest,
+  res: Response
+): Promise<void> => {
+  try {
+    const { password } =
+      deleteAccountSchema.parse(req.body);
+
+    await deleteAccountService(
+      req.userId!,
+      password
+    );
+
+    res.status(200).json({
+      success: true,
+      message: "Account deleted successfully.",
+    });
+  } catch (error: any) {
+    res.status(400).json({
+      success: false,
+      message:
+        error?.message ||
+        "Failed to delete account.",
+    });
+  }
 };

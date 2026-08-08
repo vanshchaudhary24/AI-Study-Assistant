@@ -21,33 +21,31 @@ const COLORS = [
   "#F59E0B",
 ];
 
-const FeatureUsageChart = ({
-  data = [],
-}: Props) => {
-
+const FeatureUsageChart = ({ data = [] }: Props) => {
   if (data.length === 0) {
     return (
-      <div className="rounded-2xl border border-slate-800 bg-slate-900 p-6">
-        <h2 className="mb-5 text-xl font-bold text-white">
+      <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900">
+
+        <h2 className="mb-5 text-xl font-bold text-slate-900 dark:text-white">
           AI Feature Usage
         </h2>
 
-        <div className="flex h-[300px] items-center justify-center text-slate-400">
+        <div className="flex h-[300px] items-center justify-center text-slate-500 dark:text-slate-400">
           No analytics available.
         </div>
+
       </div>
     );
   }
 
   return (
-    <div className="rounded-2xl border border-slate-800 bg-slate-900 p-6">
+    <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900">
 
-      <h2 className="mb-5 text-xl font-bold text-white">
+      <h2 className="mb-5 text-xl font-bold text-slate-900 dark:text-white">
         AI Feature Usage
       </h2>
 
       <ResponsiveContainer width="100%" height={300}>
-
         <PieChart>
 
           <Pie
@@ -57,14 +55,12 @@ const FeatureUsageChart = ({
             outerRadius={100}
             label
           >
-
             {data.map((_, index) => (
               <Cell
                 key={index}
                 fill={COLORS[index % COLORS.length]}
               />
             ))}
-
           </Pie>
 
           <Tooltip />
@@ -72,7 +68,6 @@ const FeatureUsageChart = ({
           <Legend />
 
         </PieChart>
-
       </ResponsiveContainer>
 
     </div>

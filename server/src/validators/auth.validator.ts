@@ -65,3 +65,9 @@ export const updateProfileSchema = z.object({
 
   avatar: z.string().url("Invalid avatar URL.").optional(),
 });
+
+export const deleteAccountSchema = z.object({
+  password: z
+    .string()
+    .min(1, "Password is required."),
+});

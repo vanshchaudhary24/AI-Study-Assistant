@@ -15,32 +15,30 @@ interface Props {
   }[];
 }
 
-const UploadChart = ({
-  data =[],
-}: Props) => {
-
+const UploadChart = ({ data = [] }: Props) => {
   return (
+    <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900">
 
-    <div className="rounded-2xl border border-slate-800 bg-slate-900 p-6">
-
-      <h2 className="mb-5 text-xl font-bold text-white">
-
+      <h2 className="mb-5 text-xl font-bold text-slate-900 dark:text-white">
         Weekly Upload Activity
-
       </h2>
 
-      <ResponsiveContainer
-        width="100%"
-        height={300}
-      >
-
+      <ResponsiveContainer width="100%" height={300}>
         <LineChart data={data}>
 
-          <CartesianGrid stroke="#334155" />
+          <CartesianGrid
+            stroke="#94a3b8"
+            strokeDasharray="3 3"
+          />
 
-          <XAxis dataKey="day" />
+          <XAxis
+            dataKey="day"
+            tick={{ fill: "currentColor" }}
+          />
 
-          <YAxis />
+          <YAxis
+            tick={{ fill: "currentColor" }}
+          />
 
           <Tooltip />
 
@@ -52,13 +50,10 @@ const UploadChart = ({
           />
 
         </LineChart>
-
       </ResponsiveContainer>
 
     </div>
-
   );
-
 };
 
 export default UploadChart;

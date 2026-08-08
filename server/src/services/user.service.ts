@@ -325,3 +325,28 @@ export const uploadAvatar = async (
   await user.save();
   return user;
 };
+
+// ======================== dlete account========================
+export const deleteAccount = async (
+  userId: string,
+  password: string
+) => {
+  const user = await User.findById(userId);
+
+  if (!user) {
+    throw new Error("User not found.");
+  }
+
+  const isPasswordCorrect = await comparePassword(
+    password,
+    user.password
+  );
+
+  if (!isPasswordCorrect) {
+    throw new Error("Incorrect password.");
+  }
+
+  await User.findByIdAndDelete(userId);
+  return;
+  
+};

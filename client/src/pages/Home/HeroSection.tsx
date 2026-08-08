@@ -8,10 +8,10 @@ const HeroSection = () => {
     >
       <div className="max-w-4xl text-center">
         <p className="mb-4 text-blue-400">
-          AI Powered Learning Platform
+         An AI Powered Learning Platform
         </p>
 
-        <h1 className="mb-8 text-5xl font-bold text-white md:text-7xl">
+        <h1 className="mb-8 text-7xl font-bold text-white md:text-7xl">
           Study Smarter with AI
         </h1>
 

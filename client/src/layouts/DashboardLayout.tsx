@@ -5,7 +5,7 @@ import TopNavbar from "../components/dashboard/TopNavbar";
 
 const DashboardLayout = () => {
   return (
-    <div className="flex min-h-screen bg-slate-950">
+    <div className="flex min-h-screen bg-white text-slate-900 dark:bg-slate-950 dark:text-white">
 
       <Sidebar />
 

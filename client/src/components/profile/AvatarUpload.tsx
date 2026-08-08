@@ -32,7 +32,7 @@ const AvatarUpload = () => {
         response.message
       );
 
-     await refreshUser;
+     await refreshUser();
 
     } catch (error: any) {
 

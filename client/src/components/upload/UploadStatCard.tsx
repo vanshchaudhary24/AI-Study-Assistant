@@ -12,12 +12,14 @@ const UploadStatCard = ({
   icon,
 }: UploadStatCardProps) => {
   return (
-    <div className="rounded-2xl border border-slate-800 bg-slate-900 p-6 transition hover:border-blue-500 hover:shadow-lg hover:shadow-blue-500/10">
+    <div className="rounded-2xl border border-slate-200 bg-white p-6 dark:border-slate-800 dark:bg-slate-900">
       <div className="flex items-center justify-between">
         <div>
-          <p className="text-sm text-slate-400">{title}</p>
+          <p className="text-sm text-slate-500 dark:text-slate-400">
+            {title}
+          </p>
 
-          <h2 className="mt-2 text-3xl font-bold text-white">
+          <h2 className="mt-2 text-3xl font-bold text-slate-900 dark:text-white">
             {value}
           </h2>
         </div>
